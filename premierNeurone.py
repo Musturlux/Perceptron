@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import make_blobs
+from sklearn.metrics import accuracy_score
 
 #Creation de notre dataset 
 X, y = make_blobs(n_samples=100, n_features=2, centers=2, random_state=0)
@@ -88,6 +89,20 @@ def update(dW, db, W, b, learning_rate):
 #
 #
 """
+predict permet d'avoir l'avis du model
+    param : - X (numpy.ndarray) : la matrice contenant tout les sujet avec tout leur variable
+            - W (numpy.ndarray) : la matrice contenant les poid de chaque variable
+            - b : la biai
+    return : (bool) -> true si catégorie 0
+                    -> false si catégorie 1
+"""
+def predict (X, W, b):
+    A = model(X, W, b)
+    return A >= 0.5
+#
+#
+#
+"""
 artificial_neuron est la fonction qui permet au model d'apprendre
     param : - X (numpy.ndarray) : la matrice contenant tout les sujet avec tout leur variable
             - y (numpy.ndarray) : la matrice contenant les bonnes réponses
@@ -106,6 +121,8 @@ def artificial_neuron(X, y, learning_rate = 0.1, n_iter  = 100):
         dW, db = gradients(A, X, y)
         W, b = update(dW, db, W, b, learning_rate)
     
+    y_pred = predict(X, W, b)
+    print(f"La présition de ce model est de : {(accuracy_score(y, y_pred)) * 100} %")
     plt.plot(Loss)
     plt.show()
     
