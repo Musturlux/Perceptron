@@ -21,7 +21,9 @@ def initialisation(X):
     W = np.random.randn(X.shape[1], 1) # Ici tout les variable partage le poid, toute les variable x1 partageron le poid w1
     b = np.random.randn(1)
     return(W,b)
-
+#
+#
+#
 """
 model calcule le vector Z (le shema du neurone Z = X.W+b)
 Puis calcul a parti de Z le vector d'activation A (pour savoir si le neurone d'active ou pas LOGISTIQUE)
@@ -36,8 +38,84 @@ def model(X,W,b):
     Z = X.dot(W)+b
     A = 1 / (1 + np.exp(-Z))
     return A
-
-
-W, b = initialisation(X)
-A = model(X, W, b)
-print(type(A))
+#
+#
+#
+"""
+log_loss calcul le coût de notre model.
+    param : - A (numpy.ndarray) : la matrice contenant les activation du model
+            - y (numpy.ndarray) : la matrice contenant les bonnes réponses
+    
+    return: (numpy.float64) : le coût du model 
+"""
+def log_loss(A, y):
+        return - 1 / len(y) * np.sum(y * np.log(A) - (1-y) * np.log(1-A))
+#
+#
+#
+"""
+gradient calcule le gradient du poid W et du biai b,
+utile pour réaliser le descente de gradiant nous permettant 
+d'optimiser le poid et le biai
+    param : - A (numpy.ndarray) : la matrice contenant les activation du model
+            - X (numpy.ndarray) : la matrice contenant tout les sujet avec tout leur variable
+            - y (numpy.ndarray) : la matrice contenant les bonnes réponses
+    
+    return: (dW, db) (tuple) -> (numpy.ndarray, numpy.float64) : ou dW est le gradiant de la matrice W et db le gradiant du biai
+"""   
+def gradients(A, X, y):
+    dW = 1 / len(y) * np.dot(X.T, A-y)
+    db = 1 / len(y) * np.sum(A-y)
+    return (dW, db)
+#    
+#
+#
+"""
+update met a jour les valeur de W et b avec le pas d'apprentissage
+    param : - dW (numpy.ndarray) : la matrice contenant les gradiant de W
+            - db (numpy.float64) : une flotant représentant le gradiant de b
+            - W (numpy.ndarray) : la matrice contenant les poid de chaque variable
+            - b (numpy.float64) : le biai
+            - learning_rate (float) : le tout petit pas d'aprentissage
+    return : (W, b) (tuple) -> () : lam matrice des poid et le biai mis a jour            
+            
+"""
+def update(dW, db, W, b, learning_rate):
+    W = W - learning_rate * dW
+    b = b - learning_rate * db
+    return(W, b)
+#
+#
+#
+"""
+artificial_neuron est la fonction qui permet au model d'apprendre
+    param : - X (numpy.ndarray) : la matrice contenant tout les sujet avec tout leur variable
+            - y (numpy.ndarray) : la matrice contenant les bonnes réponses
+            - learning_rate (float) : le pas d'apprentissage
+            - n_iter (int) : le nombre de fois où l'on modifi le model
+"""
+def artificial_neuron(X, y, learning_rate = 0.1, n_iter  = 100):
+    #init W, b
+    W, b = initialisation(X)
+    
+    Loss = []
+    
+    for i in range(n_iter):
+        A = model(X, W, b)
+        Loss.append(log_loss(A, y))
+        dW, db = gradients(A, X, y)
+        W, b = update(dW, db, W, b, learning_rate)
+    
+    plt.plot(Loss)
+    plt.show()
+    
+    
+#Main
+artificial_neuron(X, y)
+    
+    
+    
+    
+    
+    
+    
