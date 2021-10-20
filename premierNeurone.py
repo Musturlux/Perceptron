@@ -93,8 +93,8 @@ predict permet d'avoir l'avis du model
     param : - X (numpy.ndarray) : la matrice contenant tout les sujet avec tout leur variable
             - W (numpy.ndarray) : la matrice contenant les poid de chaque variable
             - b : la biai
-    return : (bool) -> true si catégorie 0
-                    -> false si catégorie 1
+    return : (bool) -> true si catégorie 1
+                    -> false si catégorie 0
 """
 def predict (X, W, b):
     A = model(X, W, b)
@@ -126,13 +126,20 @@ def artificial_neuron(X, y, learning_rate = 0.1, n_iter  = 100):
     plt.plot(Loss)
     plt.show()
     
+    x0 = np.linspace(-1, 4, 100)
+    x1 = (-W[0]*x0 -b) / W[1]
+    
+    nP = np.array([2, 1])
+    plt.scatter(X[:,0], X[:,1], c=y, cmap='summer')
+    plt.scatter(nP[0], nP[1], c='r')
+    plt.plot(x0, x1, c='orange', lw=3)
+    plt.show()
+    p = predict(nP, W, b)
+    print(p)
+    
+
+    
     
 #Main
 artificial_neuron(X, y)
-    
-    
-    
-    
-    
-    
     
